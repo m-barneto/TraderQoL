@@ -1,0 +1,14 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "extensions": {
+    "recommendations": ["dbaeumer.vscode-eslint"]
+  },
+  "settings": {
+    "editor.detectIndentation": false,
+    "eslint.options": {}
+  }
+}
