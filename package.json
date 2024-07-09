@@ -1,10 +1,10 @@
 {
-    "name": "traderquest-tweaks",
+    "name": "traderqol",
     "version": "1.0.0",
     "main": "src/mod.js",
     "license": "MIT",
     "author": "Mattdokn",
-    "akiVersion": "~3.8",
+    "akiVersion": "~3.9",
     "loadBefore": [],
     "loadAfter": [],
     "incompatibilities": [],
