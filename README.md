@@ -1,5 +1,3 @@
-# Roubles For All
-
-Simple project that modifies trader's stock to use roubles. Converts loyalty level requirement as well.
-
-https://hub.sp-tarkov.com/files/file/1745-roubles-for-all/
+# Trader QOL
+Unify trader currencies, increase reputation gain from trader quests.
+Simple QOL mod, everything is disabled by default, enable the modules you want in config.jsonc
