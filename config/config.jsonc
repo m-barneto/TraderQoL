@@ -18,7 +18,7 @@
     "questReputationSettings": {
         "enabled": false,
         // Multiplies the amount of reputation you get for completing a quest
-        "repMultiplier": 2.0,
+        "repMultiplier": 1.0,
         // Whether or not to apply the above multiplier to -rep rewards as well
         "multiplyNegativeReputationRewards": false
     }

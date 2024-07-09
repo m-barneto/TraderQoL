@@ -26,7 +26,7 @@ class TraderQOL implements IPostDBLoadMod {
 
         this.modConfig = jsonc.parse(vfs.readFile(path.resolve(__dirname, "../config/config.jsonc")));
 
-        
+
         const traderTable = databaseServer.getTables().traders;
         // Iterate over all traders
         for (const traderId in traderTable) {
@@ -174,6 +174,7 @@ class TraderQOL implements IPostDBLoadMod {
             }
         }
 
+        
         if (this.modConfig.minSalesMultiplier != 1.0) {
             for (const loyaltyLevelId in trader.base.loyaltyLevels) {
                 trader.base.loyaltyLevels[loyaltyLevelId].minSalesSum *= this.modConfig.minSalesMultiplier;
