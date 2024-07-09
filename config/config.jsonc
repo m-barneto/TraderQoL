@@ -1,12 +1,12 @@
 {
     // Multiplies the cost of every trader item in the game
-    "priceMultiplier": 1000.0,
+    "priceMultiplier": 1.0,
     // Multiplies the money spent amount required to unlock trader loyalty levels.
-    "minSalesMultiplier": 0.1,
+    "minSalesMultiplier": 1.0,
 
     // Options for changing the currency each trader uses
     "singleCurrencySettings": {
-        "enabled": true,
+        "enabled": false,
         // Valid options are RUB EUR USD
         "targetCurrency": "RUB",
         // Exchange rates for each currency relative to roubles
@@ -21,10 +21,5 @@
         "repMultiplier": 2.0,
         // Whether or not to apply the above multiplier to -rep rewards as well
         "multiplyNegativeReputationRewards": false
-    },
-    "tediousQuestConditionsSettings": {
-        "enabled": true,
-        // Quest's that require you to kill x amount of Bear/Usec PMC's will be changed to accept kills on any faction.
-        "anyFaction": true
     }
 }

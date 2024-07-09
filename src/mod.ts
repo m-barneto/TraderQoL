@@ -9,27 +9,24 @@ import { VFS } from "@spt-aki/utils/VFS";
 
 import { jsonc } from "jsonc";
 import path from "path";
-import { QuestTypeEnum } from "@spt-aki/models/enums/QuestTypeEnum";
-import { AvailableForConditions, IQuest } from "@spt-aki/models/eft/common/tables/IQuest";
 
 
 const roubleId = "5449016a4bdc2d6f028b456f";
 const dollarId = "5696686a4bdc2da3298b456a";
 const euroId = "569668774bdc2da2298b4568";
 
-class TraderQuestTweaks implements IPostDBLoadMod {
+class TraderQOL implements IPostDBLoadMod {
     private modConfig;
     private logger: ILogger;
-    private questTypes: Set<string>;
 
     public postDBLoad(container: DependencyContainer): void {
         const databaseServer = container.resolve<DatabaseServer>("DatabaseServer");
         const vfs = container.resolve<VFS>("VFS");
-
-        this.questTypes = new Set<string>();
         this.logger = container.resolve<ILogger>("WinstonLogger");
+
         this.modConfig = jsonc.parse(vfs.readFile(path.resolve(__dirname, "../config/config.jsonc")));
 
+        
         const traderTable = databaseServer.getTables().traders;
         // Iterate over all traders
         for (const traderId in traderTable) {
@@ -61,83 +58,6 @@ class TraderQuestTweaks implements IPostDBLoadMod {
                         reward.value = Math.ceil(prevValue * Number(this.modConfig.questReputationSettings.repMultiplier) * 100) / 100;
                     }
                 }
-            }
-        }
-
-        if (this.modConfig.tediousQuestConditionsSettings.enabled) {
-            const questTable = databaseServer.getTables().templates.quests;
-            
-            // Iterate over all quests
-            for (const questId in questTable) {
-                const quest: IQuest = questTable[questId];
-                const completionConditions = quest.conditions.AvailableForFinish;
-
-
-
-                switch (quest.type) {
-                    case QuestTypeEnum.PICKUP:
-                        break;
-                    case QuestTypeEnum.ELIMINATION:
-                        completionConditions.forEach(condition => {
-                            const props = condition as any;
-                            if (props.conditionType == "CounterCreator") {
-                                if (props.target == "Usec" || props.target == "Bear") {
-                                    this.logger.info("Found usec/bear target in quest " + quest.QuestName);
-                                    props.target = "AnyPmc";
-                                }
-                            }
-                        });
-                        break;
-                    case QuestTypeEnum.DISCOVER:
-                        break;
-                    case QuestTypeEnum.COMPLETION:
-                        break;
-                    case QuestTypeEnum.EXPLORATION:
-                        break;
-                    case QuestTypeEnum.LEVELLING:
-                        break;
-                    case QuestTypeEnum.EXPERIENCE:
-                        break;
-                    case QuestTypeEnum.STANDING:
-                        break;
-                    case QuestTypeEnum.LOYALTY:
-                        break;
-                    case QuestTypeEnum.MERCHANT:
-                        break;
-                    case QuestTypeEnum.SKILL:
-                        break;
-                    case QuestTypeEnum.MULTI:
-                        break;
-                    case QuestTypeEnum.WEAPON_ASSEMBLY:
-                        break;
-                }
-
-                completionConditions.forEach(condition => {
-                    // marking quests suck ass
-                    switch ((condition as any).conditionType) {
-                        case "CounterCreator":
-                            // conditions for kills
-                            break;
-                        case "HandoverItem":
-                            break;
-                        case "FindItem":
-                            break;
-                        case "LeaveItemAtLocation":
-                            break;
-                        case "Quest":
-                            break;
-                        case "PlaceBeacon":
-                            break;
-                        case "Skill":
-                            break;
-                        case "WeaponAssembly":
-                            break;
-                        case "TraderLoyalty":
-                            break;
-                        default:
-                            break;
-                    }
-                });
             }
         }
     }
@@ -285,4 +205,4 @@ class TraderQuestTweaks implements IPostDBLoadMod {
     }
 }
 
-module.exports = { mod: new TraderQuestTweaks() };
+module.exports = { mod: new TraderQOL() };
