@@ -1,14 +1,13 @@
 import { DependencyContainer } from "tsyringe";
 
-import { IPostDBLoadMod } from "@spt-aki/models/external/IPostDBLoadMod";
-import { ILogger } from "@spt-aki/models/spt/utils/ILogger";
-import { QuestRewardType } from "@spt-aki/models/enums/QuestRewardType";
-import { DatabaseServer } from "@spt-aki/servers/DatabaseServer";
-import { ITrader } from "@spt-aki/models/eft/common/tables/ITrader";
-import { VFS } from "@spt-aki/utils/VFS";
-
 import { jsonc } from "jsonc";
 import path from "path";
+import { ITrader } from "@spt/models/eft/common/tables/ITrader";
+import { QuestRewardType } from "@spt/models/enums/QuestRewardType";
+import { IPostDBLoadMod } from "@spt/models/external/IPostDBLoadMod";
+import { ILogger } from "@spt/models/spt/utils/ILogger";
+import { DatabaseServer } from "@spt/servers/DatabaseServer";
+import { VFS } from "@spt/utils/VFS";
 
 
 const roubleId = "5449016a4bdc2d6f028b456f";
@@ -201,6 +200,12 @@ class TraderQOL implements IPostDBLoadMod {
                         item.count *= this.modConfig.priceMultiplier;
                     }
                 }
+            }
+        }
+
+        if (trader.base.insurance.availability && this.modConfig.insuranceSettings.insuranceCostMultiplier != 1.0) {
+            for (const loyaltyLevelId in trader.base.loyaltyLevels) {
+                trader.base.loyaltyLevels[loyaltyLevelId].insurance_price_coef *= this.modConfig.insuranceSettings.insuranceCostMultiplier;
             }
         }
     }

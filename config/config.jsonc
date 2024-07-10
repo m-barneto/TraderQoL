@@ -21,5 +21,11 @@
         "repMultiplier": 1.0,
         // Whether or not to apply the above multiplier to -rep rewards as well
         "multiplyNegativeReputationRewards": false
+    },
+    // Options for modifying insurance settings
+    "insuranceSettings": {
+        "enabled": false,
+        // Multiplies the cost of insurance
+        "insuranceCostMultiplier": 1.0
     }
 }
