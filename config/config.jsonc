@@ -8,7 +8,7 @@
     "singleCurrencySettings": {
         "enabled": false,
         // Valid options are RUB EUR USD
-        "targetCurrency": "RUB",
+        "targetCurrency": "USD",
         // Exchange rates for each currency relative to roubles
         // 1 dollar is equal to 154 roubles
         "dollarExchangeRate": 154,
@@ -25,7 +25,7 @@
     // Options for modifying insurance settings
     "insuranceSettings": {
         "enabled": false,
-        // Multiplies the cost of insurance
+        // Multiplies the cost of insurance (Bigger number = higher cost to insure)
         "insuranceCostMultiplier": 1.0
     }
 }

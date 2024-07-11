@@ -14,7 +14,7 @@ const roubleId = "5449016a4bdc2d6f028b456f";
 const dollarId = "5696686a4bdc2da3298b456a";
 const euroId = "569668774bdc2da2298b4568";
 
-class TraderQOL implements IPostDBLoadMod {
+class TraderQoL implements IPostDBLoadMod {
     private modConfig;
     private logger: ILogger;
 
@@ -24,7 +24,6 @@ class TraderQOL implements IPostDBLoadMod {
         this.logger = container.resolve<ILogger>("WinstonLogger");
 
         this.modConfig = jsonc.parse(vfs.readFile(path.resolve(__dirname, "../config/config.jsonc")));
-
 
         const traderTable = databaseServer.getTables().traders;
         // Iterate over all traders
@@ -61,13 +60,13 @@ class TraderQOL implements IPostDBLoadMod {
         }
     }
 
-    private getConversionRate(fromCurrency, targetCurrency) {
+    private getConversionRate(fromCurrency, targetCurrency): number {
         if (fromCurrency == targetCurrency) return 1.0;
 
         if (fromCurrency == "EUR") {
             if (targetCurrency == "USD") {
                 // euro to rouble first, then to usd
-                return this.getConversionRate(fromCurrency, "RUB") * this.modConfig.dollarExchangeRate;
+                return this.getConversionRate(fromCurrency, "RUB") * this.modConfig.singleCurrencySettings.dollarExchangeRate;
             } else if (targetCurrency == "RUB") {
                 return this.modConfig.singleCurrencySettings.euroExchangeRate;
             }
@@ -88,7 +87,7 @@ class TraderQOL implements IPostDBLoadMod {
         }
         
         
-        this.logger.error(`[TraderQuestTweaks] Failed to convert from ${fromCurrency} to ${targetCurrency}.`);
+        this.logger.error(`[TraderQoL] Failed to convert from ${fromCurrency} to ${targetCurrency}.`);
         return 1.0;
     }
 
@@ -101,7 +100,7 @@ class TraderQOL implements IPostDBLoadMod {
             case "USD":
                 return dollarId;
         }
-        this.logger.error(`[TraderQuestTweaks] Failed to get id from currency name ${currency}.`);
+        this.logger.error(`[TraderQoL] Failed to get id from currency name ${currency}.`);
         return null;
     }
 
@@ -114,7 +113,7 @@ class TraderQOL implements IPostDBLoadMod {
             case dollarId:
                 return "USD";
         }
-        this.logger.error(`[TraderQuestTweaks] Failed to get currency name from ID ${currencyId}.`);
+        this.logger.error(`[TraderQoL] Failed to get currency name from ID ${currencyId}.`);
         return null;
     }
 
@@ -164,7 +163,7 @@ class TraderQOL implements IPostDBLoadMod {
                     if (this.isCurrencyItem(item._tpl) && this.getCurrencyName(item._tpl) !== this.modConfig.singleCurrencySettings.targetCurrency) {
                         // Change it's count (price) to reflect the exchange rate
                         const exchangeRate = this.getConversionRate(this.getCurrencyName(item._tpl), this.modConfig.singleCurrencySettings.targetCurrency);
-                        item.count *= exchangeRate;
+                        item.count = Math.max(1.0, Math.round(item.count * exchangeRate));
 
                         // Change the cost currency to our target currency id
                         item._tpl = targetCurrencyId;
@@ -203,7 +202,7 @@ class TraderQOL implements IPostDBLoadMod {
             }
         }
 
-        if (trader.base.insurance.availability && this.modConfig.insuranceSettings.insuranceCostMultiplier != 1.0) {
+        if (trader.base.insurance.availability && this.modConfig.insuranceSettings.enabled && this.modConfig.insuranceSettings.insuranceCostMultiplier != 1.0) {
             for (const loyaltyLevelId in trader.base.loyaltyLevels) {
                 trader.base.loyaltyLevels[loyaltyLevelId].insurance_price_coef *= this.modConfig.insuranceSettings.insuranceCostMultiplier;
             }
@@ -211,4 +210,4 @@ class TraderQOL implements IPostDBLoadMod {
     }
 }
 
-module.exports = { mod: new TraderQOL() };
+module.exports = { mod: new TraderQoL() };
