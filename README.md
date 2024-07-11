@@ -9,3 +9,4 @@ Simple QOL mod, everything is disabled by default, enable the modules you want i
 - Increase reputation gain from quests
 - Increase/Decrease prices of all items in game
 - Change amount spent requirement for leveling traders
+- Change insurance pricing
