@@ -6,9 +6,9 @@
 
     // Options for changing the currency each trader uses
     "singleCurrencySettings": {
-        "enabled": true,
+        "enabled": false,
         // Valid options are RUB EUR USD
-        "targetCurrency": "USD",
+        "targetCurrency": "RUB",
         // Exchange rates for each currency relative to roubles
         // 1 dollar is equal to 154 roubles
         "dollarExchangeRate": 154,
