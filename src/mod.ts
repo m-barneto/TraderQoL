@@ -139,7 +139,7 @@ class TraderQoL implements IPostDBLoadMod {
                 }
                 
                 // Set trader to use target currency
-                trader.base.currency = this.modConfig.targetCurrency;
+                trader.base.currency = this.modConfig.singleCurrencySettings.targetCurrency;
             }
 
             // Convert trader stock to target currency

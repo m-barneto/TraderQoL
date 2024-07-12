@@ -6,7 +6,7 @@
 
     // Options for changing the currency each trader uses
     "singleCurrencySettings": {
-        "enabled": false,
+        "enabled": true,
         // Valid options are RUB EUR USD
         "targetCurrency": "USD",
         // Exchange rates for each currency relative to roubles
