@@ -27,5 +27,10 @@
         "enabled": false,
         // Multiplies the cost of insurance (Bigger number = higher cost to insure)
         "insuranceCostMultiplier": 1.0
+    },
+    "repairSettings": {
+        "enabled": false,
+        // Multiplies the cost of repairing weapons and armor (Bigger number = higher cost to repair)
+        "repairCostMultiplier": 1.0
     }
 }

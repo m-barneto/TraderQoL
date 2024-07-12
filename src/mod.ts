@@ -207,6 +207,12 @@ class TraderQoL implements IPostDBLoadMod {
                 trader.base.loyaltyLevels[loyaltyLevelId].insurance_price_coef *= this.modConfig.insuranceSettings.insuranceCostMultiplier;
             }
         }
+
+        if (trader.base.repair.availability && this.modConfig.repairSettings.enabled && this.modConfig.repairSettings.repairCostMultiplier != 1.0) {
+            for (const loyaltyLevelId in trader.base.loyaltyLevels) {
+                trader.base.loyaltyLevels[loyaltyLevelId].repair_price_coef *= this.modConfig.repairSettings.repairCostMultiplier;
+            }
+        }
     }
 }
 
