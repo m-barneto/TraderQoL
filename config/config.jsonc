@@ -4,6 +4,11 @@
     // Multiplies the money spent amount required to unlock trader loyalty levels.
     "minSalesMultiplier": 1.0,
 
+    // Multiplier for trader's stock
+    "traderStockMultiplier": 1.0,
+    // Set trader stock to be unlimited (Use this instead of setting multiplier super high)
+    "unlimitedTraderStock": false,
+
     // Options for changing the currency each trader uses
     "singleCurrencySettings": {
         "enabled": false,

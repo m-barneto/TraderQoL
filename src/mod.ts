@@ -14,8 +14,44 @@ const roubleId = "5449016a4bdc2d6f028b456f";
 const dollarId = "5696686a4bdc2da3298b456a";
 const euroId = "569668774bdc2da2298b4568";
 
+//#region ModConfig
+interface ModConfig {
+    priceMultiplier: number;
+    minSalesMultiplier: number;
+    traderStockMultiplier: number;
+    unlimitedTraderStock: boolean;
+    singleCurrencySettings: SingleCurrencySettings;
+    questReputationSettings: QuestReputationSettings;
+    insuranceSettings: InsuranceSettings;
+    repairSettings: RepairSettings;
+}
+
+interface RepairSettings {
+    enabled: boolean;
+    repairCostMultiplier: number;
+}
+
+interface InsuranceSettings {
+    enabled: boolean;
+    insuranceCostMultiplier: number;
+}
+
+interface QuestReputationSettings {
+    enabled: boolean;
+    repMultiplier: number;
+    multiplyNegativeReputationRewards: boolean;
+}
+
+interface SingleCurrencySettings {
+    enabled: boolean;
+    targetCurrency: string;
+    dollarExchangeRate: number;
+    euroExchangeRate: number;
+}
+//#endregion
+
 class TraderQoL implements IPostDBLoadMod {
-    private modConfig;
+    private modConfig: ModConfig;
     private logger: ILogger;
 
     public postDBLoad(container: DependencyContainer): void {
@@ -198,6 +234,18 @@ class TraderQoL implements IPostDBLoadMod {
                         // Change it's count (price)
                         item.count *= this.modConfig.priceMultiplier;
                     }
+                }
+            }
+        }
+
+        if (this.modConfig.traderStockMultiplier != 1.0 || this.modConfig.unlimitedTraderStock) {
+            const items = trader.assort.items;
+            for (const itemId in items) {
+                const item = items[itemId];
+                if (this.modConfig.unlimitedTraderStock) {
+                    item.upd.BuyRestrictionMax = Math.max(1.0, Math.round(item.upd.BuyRestrictionMax * this.modConfig.traderStockMultiplier));
+                } else {
+                    item.upd.UnlimitedCount = true;
                 }
             }
         }
