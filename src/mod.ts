@@ -20,6 +20,7 @@ interface ModConfig {
     minSalesMultiplier: number;
     traderStockMultiplier: number;
     unlimitedTraderStock: boolean;
+    traderBuyRestrictionMultiplier: number;
     singleCurrencySettings: SingleCurrencySettings;
     questReputationSettings: QuestReputationSettings;
     insuranceSettings: InsuranceSettings;
@@ -242,10 +243,18 @@ class TraderQoL implements IPostDBLoadMod {
             const items = trader.assort.items;
             for (const itemId in items) {
                 const item = items[itemId];
-                if (this.modConfig.unlimitedTraderStock) {
-                    item.upd.BuyRestrictionMax = Math.max(1.0, Math.round(item.upd.BuyRestrictionMax * this.modConfig.traderStockMultiplier));
-                } else {
+                if (!item.upd) continue;
+
+                if ("UnlimitedCount" in item.upd && this.modConfig.unlimitedTraderStock) {
                     item.upd.UnlimitedCount = true;
+                }
+
+                if ("BuyRestrictionMax" in item.upd && this.modConfig.traderBuyRestrictionMultiplier != 1.0) {
+                    item.upd.BuyRestrictionMax = Math.max(1.0, Math.round(item.upd.BuyRestrictionMax * this.modConfig.traderBuyRestrictionMultiplier));
+                }
+
+                if ("StackObjectsCount" in item.upd && this.modConfig.traderStockMultiplier != 1.0) {
+                    item.upd.StackObjectsCount = Math.max(1.0, Math.round(item.upd.StackObjectsCount * this.modConfig.traderStockMultiplier));
                 }
             }
         }

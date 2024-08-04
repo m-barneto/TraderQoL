@@ -6,6 +6,8 @@
 
     // Multiplier for trader's stock
     "traderStockMultiplier": 1.0,
+    // Multiplier for trader buy restrictions
+    "traderBuyRestrictionMultiplier": 1.0,
     // Set trader stock to be unlimited (Use this instead of setting multiplier super high)
     "unlimitedTraderStock": false,
 
