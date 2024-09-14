@@ -8,7 +8,9 @@
     "traderStockMultiplier": 1.0,
     // Multiplier for trader buy restrictions
     "traderBuyRestrictionMultiplier": 1.0,
+
     // Set trader stock to be unlimited (Use this instead of setting multiplier super high)
+    // Removes buy restrictions
     "unlimitedTraderStock": false,
 
     // Options for changing the currency each trader uses

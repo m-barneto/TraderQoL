@@ -239,18 +239,19 @@ class TraderQoL implements IPostDBLoadMod {
             }
         }
 
-        if (this.modConfig.traderStockMultiplier != 1.0 || this.modConfig.unlimitedTraderStock) {
+        if (this.modConfig.traderStockMultiplier != 1.0 || this.modConfig.traderBuyRestrictionMultiplier != 1.0 || this.modConfig.unlimitedTraderStock) {
             const items = trader.assort.items;
             for (const itemId in items) {
                 const item = items[itemId];
                 if (!item.upd) continue;
 
-                if ("UnlimitedCount" in item.upd && this.modConfig.unlimitedTraderStock) {
-                    item.upd.UnlimitedCount = true;
-                }
-
                 if ("BuyRestrictionMax" in item.upd && this.modConfig.traderBuyRestrictionMultiplier != 1.0) {
                     item.upd.BuyRestrictionMax = Math.max(1.0, Math.round(item.upd.BuyRestrictionMax * this.modConfig.traderBuyRestrictionMultiplier));
+                }
+                
+                if ("UnlimitedCount" in item.upd && this.modConfig.unlimitedTraderStock) {
+                    item.upd.UnlimitedCount = true;
+                    item.upd.BuyRestrictionMax = null;
                 }
 
                 if ("StackObjectsCount" in item.upd && this.modConfig.traderStockMultiplier != 1.0) {
