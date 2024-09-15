@@ -251,7 +251,9 @@ class TraderQoL implements IPostDBLoadMod {
                 
                 if ("UnlimitedCount" in item.upd && this.modConfig.unlimitedTraderStock) {
                     item.upd.UnlimitedCount = true;
-                    item.upd.BuyRestrictionMax = null;
+                    if ("BuyRestrictionMax" in item.upd) {
+                        delete item.upd.BuyRestrictionMax;
+                    }
                 }
 
                 if ("StackObjectsCount" in item.upd && this.modConfig.traderStockMultiplier != 1.0) {
