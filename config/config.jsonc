@@ -34,6 +34,7 @@
     // Options for modifying quest requirements
     "questRequirementSettings": {
         "enabled": false,
+        // Removes FiR requirement for handover/turn in item quests
         "removeFoundInRaidRequirement": false
     },
     // Options for modifying insurance settings
