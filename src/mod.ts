@@ -23,6 +23,7 @@ interface ModConfig {
     traderBuyRestrictionMultiplier: number;
     singleCurrencySettings: SingleCurrencySettings;
     questReputationSettings: QuestReputationSettings;
+    questRequirementSettings: QuestRequirementSettings;
     insuranceSettings: InsuranceSettings;
     repairSettings: RepairSettings;
 }
@@ -41,6 +42,11 @@ interface QuestReputationSettings {
     enabled: boolean;
     repMultiplier: number;
     multiplyNegativeReputationRewards: boolean;
+}
+
+interface QuestRequirementSettings {
+    enabled: boolean;
+    removeFoundInRaidRequirement: boolean;
 }
 
 interface SingleCurrencySettings {
@@ -69,17 +75,28 @@ class TraderQoL implements IPostDBLoadMod {
             const nickname = trader.base.nickname;
             // Unknown and caretaker are excluded
             if (nickname === "caretaker" || nickname === "Unknown" || nickname === "БТР") continue;
-            
+
             this.updateTrader(trader);
         }
 
-        if (this.modConfig.questReputationSettings.enabled) {
-            const questTable = databaseServer.getTables().templates.quests;
-            
-            // Iterate over all quests
-            for (const questId in questTable) {
-                const quest = questTable[questId];
+        const questTable = databaseServer.getTables().templates.quests;
 
+        // Iterate over all quests
+        for (const questId in questTable) {
+            const quest = questTable[questId];
+
+            // Modify quest requirements
+            if (this.modConfig.questRequirementSettings.enabled) {
+                for (const conditionIndex in quest.conditions.AvailableForFinish) {
+                    const condition = quest.conditions.AvailableForFinish[conditionIndex];
+                    if (condition.onlyFoundInRaid) {
+                        condition.onlyFoundInRaid = !this.modConfig.questRequirementSettings.removeFoundInRaidRequirement;
+                    }
+                }
+            }
+
+
+            if (this.modConfig.questReputationSettings.enabled) {
                 // Modify quest rewards
                 const questRewards = quest.rewards.Success;
                 for (const rewardIdx in questRewards) {
@@ -122,8 +139,8 @@ class TraderQoL implements IPostDBLoadMod {
                 return 1.0 / this.modConfig.singleCurrencySettings.dollarExchangeRate;
             }
         }
-        
-        
+
+
         this.logger.error(`[TraderQoL] Failed to convert from ${fromCurrency} to ${targetCurrency}.`);
         return 1.0;
     }
@@ -174,7 +191,7 @@ class TraderQoL implements IPostDBLoadMod {
                 for (const loyaltyLevelId in trader.base.loyaltyLevels) {
                     trader.base.loyaltyLevels[loyaltyLevelId].minSalesSum *= exchangeRate;
                 }
-                
+
                 // Set trader to use target currency
                 trader.base.currency = this.modConfig.singleCurrencySettings.targetCurrency;
             }
@@ -209,13 +226,13 @@ class TraderQoL implements IPostDBLoadMod {
             }
         }
 
-        
+
         if (this.modConfig.minSalesMultiplier != 1.0) {
             for (const loyaltyLevelId in trader.base.loyaltyLevels) {
                 trader.base.loyaltyLevels[loyaltyLevelId].minSalesSum *= this.modConfig.minSalesMultiplier;
             }
         }
-        
+
         if (this.modConfig.priceMultiplier != 1.0) {
             // Get the trader's stock
             const barters = trader.assort.barter_scheme;
@@ -248,7 +265,7 @@ class TraderQoL implements IPostDBLoadMod {
                 if ("BuyRestrictionMax" in item.upd && this.modConfig.traderBuyRestrictionMultiplier != 1.0) {
                     item.upd.BuyRestrictionMax = Math.max(1.0, Math.round(item.upd.BuyRestrictionMax * this.modConfig.traderBuyRestrictionMultiplier));
                 }
-                
+
                 if ("UnlimitedCount" in item.upd && this.modConfig.unlimitedTraderStock) {
                     item.upd.UnlimitedCount = true;
                     if ("BuyRestrictionMax" in item.upd) {
