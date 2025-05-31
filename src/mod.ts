@@ -3,11 +3,11 @@ import { DependencyContainer } from "tsyringe";
 import { jsonc } from "jsonc";
 import path from "path";
 import { ITrader } from "@spt/models/eft/common/tables/ITrader";
-import { QuestRewardType } from "@spt/models/enums/QuestRewardType";
 import { IPostDBLoadMod } from "@spt/models/external/IPostDBLoadMod";
 import { ILogger } from "@spt/models/spt/utils/ILogger";
 import { DatabaseServer } from "@spt/servers/DatabaseServer";
-import { VFS } from "@spt/utils/VFS";
+import { FileSystemSync } from "@spt/utils/FileSystemSync";
+import { RewardType } from "@spt/models/enums/RewardType";
 
 
 const roubleId = "5449016a4bdc2d6f028b456f";
@@ -63,10 +63,10 @@ class TraderQoL implements IPostDBLoadMod {
 
     public postDBLoad(container: DependencyContainer): void {
         const databaseServer = container.resolve<DatabaseServer>("DatabaseServer");
-        const vfs = container.resolve<VFS>("VFS");
+        const fs = container.resolve<FileSystemSync>("FileSystemSync");
         this.logger = container.resolve<ILogger>("WinstonLogger");
 
-        this.modConfig = jsonc.parse(vfs.readFile(path.resolve(__dirname, "../config/config.jsonc")));
+        this.modConfig = jsonc.parse(fs.read(path.resolve(__dirname, "../config/config.jsonc")));
 
         const traderTable = databaseServer.getTables().traders;
         // Iterate over all traders
@@ -101,7 +101,7 @@ class TraderQoL implements IPostDBLoadMod {
                 const questRewards = quest.rewards.Success;
                 for (const rewardIdx in questRewards) {
                     const reward = questRewards[rewardIdx];
-                    if (reward.type == QuestRewardType.TRADER_STANDING) {
+                    if (reward.type == RewardType.TRADER_STANDING) {
                         const prevValue = Number(reward.value);
                         if (prevValue < 0.0 && !this.modConfig.questReputationSettings.multiplyNegativeReputationRewards) {
                             continue;

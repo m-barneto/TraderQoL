@@ -1,10 +1,10 @@
 {
     "name": "traderqol",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "main": "src/mod.js",
     "license": "MIT",
     "author": "Mattdokn",
-    "sptVersion": "~3.10",
+    "sptVersion": "~3.11",
     "loadBefore": [],
     "loadAfter": [],
     "incompatibilities": [],
